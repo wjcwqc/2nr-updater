@@ -34,9 +34,11 @@ def check(rst):
     if rst.find("status=") == 0:
         rst = int(rst.split("=")[1])
         if rst > 80000:
-            return True
+            sign=True
+        elif [-24,-30,-29].count(rst)!=1:
+            sign="reset"
         else:
-            return rst
+            sign=False
     else:
         return rst
 
@@ -46,9 +48,10 @@ def main():
     region,phone=sys.argv[1:]
     rst = check(send_sms(region, phone))
     if rst == True:
-        print("True")
-    elif rst == False:
-        print("False")
+        print("OK!")
+    elif rst=="reset":
+        print("False and resend once again!")
+        print(send_sms(region, phone))
     else:
         print("rst: ", rst)
 
