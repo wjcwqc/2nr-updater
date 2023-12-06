@@ -29,8 +29,9 @@ def send_sms(region, phone,sms="update+validation"):
         code)).text
     return rst
 
-# 检擦发送状态
+# 检查发送状态
 def check(rst):
+    sign = rst
     if rst.find("status=") == 0:
         rst = int(rst.split("=")[1])
         if rst > 80000:
@@ -38,20 +39,19 @@ def check(rst):
         elif [-24,-30,-29].count(rst)!=1:
             sign="reset"
         else:
+            # print(sign)
             sign=False
-    else:
-        return rst
-
-
+    return sign
 
 def main():
     region,phone=sys.argv[1:]
+    print(region,phone)
     rst = check(send_sms(region, phone))
     if rst == True:
         print("OK!")
     elif rst=="reset":
         print("False and resend once again!")
-        print(send_sms(region, phone))
+        print(check(send_sms(region, phone)))
     else:
         print("rst: ", rst)
 
